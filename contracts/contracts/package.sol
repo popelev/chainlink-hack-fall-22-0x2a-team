@@ -10,24 +10,26 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 error Package__TransferFaild();
 
 contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
-    /* Structs */
-    struct TokenState {
-        bool IsAnnounced;
-        bool IsProduced;
-        uint256 ProducedTime;
-        bool IsInStock;
-        uint256 InStockTime;
-        bool IsSold;
-        uint256 SoldTime;
-    }
-
     /* Enums */
     enum State {
-        ANNOUNCED,
+        MINTED,
         PRODUCED,
         IN_STOCK,
         SOLD
     }
+
+    /* Structs */
+    struct TokenDetails {
+        State state;
+        uint256 uniqueId;
+        uint256 titleId;
+        uint256 descriptionId;
+        uint256 imageUriId;
+        uint256 producedTime;
+        uint256 inStockTime;
+        uint256 soldTime;
+    }
+
     /* Manager contract */
     address private s_managerContract;
 
@@ -36,7 +38,6 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     bytes32 private immutable i_gasLane;
     uint64 private immutable i_subscriptionId;
     uint32 private immutable i_callbackGasLimit;
-    uint32 private constant NUM_WORDS = 1;
     uint16 private constant REQUEST_CONFIRMATION = 1;
 
     /* VRF Helper */
@@ -44,16 +45,22 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     /* NFT varible */
     uint256 public s_tokenCounter;
-    uint256 internal constant MAX_CHANCE_VALUE = 100;
-    string[] internal s_tokenUris;
-    mapping(uint256 => State) public s_tokenState;
-    mapping(uint256 => uint256) public s_tokenProducedTime;
-    mapping(uint256 => uint256) public s_tokenInStockTime;
-    mapping(uint256 => uint256) public s_tokenSoldTime;
+    mapping(uint256 => string) public s_imageUris;
+    mapping(uint256 => TokenDetails) public s_tokenDetails;
+    mapping(uint256 => string) public s_titles;
+    mapping(uint256 => string) public s_descriptions;
 
-    /* Events */
+    /* Token state Events */
     event TokenRequested(uint256 indexed requestId, address requester);
-    event TokenMinted(uint256 requestId, address minter);
+    event TokenMinted(uint256 requestId, uint256 randomNumber);
+    event TokenPoduced(uint256 tokenId, uint256 time);
+    event TokenInStock(uint256 tokenId, uint256 time);
+    event TokenSold(uint256 tokenId, uint256 time);
+
+    /* Token description Events */
+    event TitleListEdited(uint256 indexed id, string oldString, string newString);
+    event DescriptionListEdited(uint256 indexed id, string oldString, string newString);
+    event ImageUriListEdited(uint256 indexed id, string oldString, string newString);
 
     /* CONSTRUCTOR */
     constructor(
@@ -69,13 +76,14 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     }
 
     /* PUBLIC FUNCTIONS */
-    function mintNft() public payable onlyOwner returns (uint256 requestId) {
+    function mintNft(uint32 countOfNft) public payable onlyOwner returns (uint256 requestId) {
+        require(countOfNft < 500);
         requestId = i_vrfCoordinator.requestRandomWords(
             i_gasLane,
             i_subscriptionId,
             REQUEST_CONFIRMATION,
             i_callbackGasLimit,
-            NUM_WORDS
+            countOfNft
         );
         s_requestIdSender[requestId] = msg.sender;
         emit TokenRequested(requestId, msg.sender);
@@ -85,12 +93,17 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
         address tokenOwner = s_requestIdSender[requestId];
         uint256 newTokenId = s_tokenCounter;
-
-        s_tokenCounter += s_tokenCounter;
-        _safeMint(tokenOwner, newTokenId);
-        //_setTokenURI(newTokenId, s_dogTokenUris[uint256(dogBreed)]);
-        //emit TokenMinted(dogBreed, tokenOwner);
+        for (uint256 i = 0; i < randomWords.length; i++) {
+            newTokenId += newTokenId;
+            uint256 random = randomWords[0];
+            _safeMint(tokenOwner, newTokenId);
+            emit TokenMinted(requestId, random);
+        }
+        s_tokenCounter = newTokenId;
     }
+
+    /* SETTERS */
+    function setName() public {}
 
     /* GETTERS */
 
@@ -98,8 +111,9 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return i_gasLane;
     }
 
-    function tokenURI(uint256 index) public view override returns (string memory) {
-        return s_tokenUris[index];
+    function getTokenURI(uint256 index) public view returns (string memory) {
+        uint256 imageUriId = s_tokenDetails[index].imageUriId;
+        return s_imageUris[imageUriId];
     }
 
     function getVrfCoordinatorAddress() public view returns (address) {
@@ -110,18 +124,8 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return s_tokenCounter;
     }
 
-    function getMaxChance() public pure returns (uint256) {
-        return MAX_CHANCE_VALUE;
-    }
-
-    function getTokenState(uint256 index) public view returns (TokenState memory tokenState) {
-        tokenState.IsAnnounced = s_tokenState[index] <= State.ANNOUNCED;
-        tokenState.IsProduced = s_tokenState[index] <= State.PRODUCED;
-        tokenState.ProducedTime;
-        tokenState.IsInStock = s_tokenState[index] <= State.IN_STOCK;
-        tokenState.InStockTime;
-        tokenState.IsSold = s_tokenState[index] <= State.SOLD;
-        tokenState.SoldTime;
+    function getTokenDetails(uint256 index) public view returns (TokenDetails memory) {
+        return s_tokenDetails[index];
     }
 
     /* MODIFIERS */
