@@ -114,6 +114,15 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         s_tokenCounter = newTokenId;
     }
 
+    /* OWNER SETTERS */
+    function setManager(address manager) external onlyOwner {
+        s_managers[manager] = true;
+    }
+
+    function resetManager(address manager) external onlyOwner {
+        s_managers[manager] = false;
+    }
+
     /* MANAGER SETTERS */
     function setImageUriInList(uint256 index, string calldata newImageUri) external onlyManager {
         string memory oldImageUri = s_imageUris[index];
@@ -134,6 +143,22 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         string memory oldDescription = s_titles[index];
         s_descriptions[index] = newDescription;
         emit DescriptionListEdited(index, oldDescription, newDescription);
+    }
+
+    function setProducer(address producer) external onlyManager {
+        s_producers[producer] = true;
+    }
+
+    function resetProducer(address producer) external onlyManager {
+        s_producers[producer] = false;
+    }
+
+    function setSuplier(address suplier) external onlyManager {
+        s_supliers[suplier] = true;
+    }
+
+    function resetSuplier(address suplier) external onlyManager {
+        s_supliers[suplier] = false;
     }
 
     /* PRODUCER SETTERS */
@@ -197,6 +222,18 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     function getTokenDetails(uint256 index) public view returns (TokenDetails memory) {
         return s_tokenDetails[index];
+    }
+
+    function isManager(address manager) public view returns (bool) {
+        return s_managers[manager];
+    }
+
+    function isProducer(address producer) public view returns (bool) {
+        return s_producers[producer];
+    }
+
+    function isSuplier(address suplier) public view returns (bool) {
+        return s_supliers[suplier];
     }
 
     /* MODIFIERS */

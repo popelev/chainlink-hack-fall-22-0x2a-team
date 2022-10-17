@@ -55,11 +55,54 @@ describe("Package", function () {
         }
     }
 
-    describe("Deployment", function () {
-        it("is deployed", async () => {
+    xdescribe("constructor", async function () {
+        it("Initialize packageTracker correctly", async function () {
             await loadFixture(deployAll)
 
-            expect(true)
+            const vrfCoordinator = await packageTracker.getVrfCoordinatorAddress()
+
+            expect(await packageTracker.name()).to.equal("QR-NFT Tracking")
+            expect(await packageTracker.symbol()).to.equal("QNFTT")
+            expect(vrfCoordinator.toString() !== "0x0000000000000000000000000000000000000000")
+        })
+    })
+
+    describe("setManager", async function () {
+        it("reverted if called by not owner", async function () {
+            await loadFixture(deployAll)
+
+            expect(await packageTracker.isManager(manager.address)).to.equal(false)
+            await expect(
+                packageTracker.connect(user).setManager(manager.address)
+            ).to.be.revertedWith("Ownable: caller is not the owner")
+            expect(await packageTracker.isManager(manager.address)).to.equal(false)
+        })
+        it("manager is setted correctly", async function () {
+            await loadFixture(deployAll)
+
+            expect(await packageTracker.isManager(manager.address)).to.equal(false)
+            await packageTracker.setManager(manager.address)
+            expect(await packageTracker.isManager(manager.address)).to.equal(true)
+        })
+    })
+
+    describe("setProducer", async function () {
+        it("reverted if called by not manager", async function () {
+            await loadFixture(deployAll)
+
+            expect(await packageTracker.isProducer(producer.address)).to.equal(false)
+            await expect(
+                packageTracker.connect(user).setProducer(producer.address)
+            ).to.be.revertedWith("Caller is not the manager")
+            expect(await packageTracker.isProducer(producer.address)).to.equal(false)
+        })
+        it("producer is setted correctly", async function () {
+            await loadFixture(deployAll)
+
+            await packageTracker.setManager(manager.address)
+            expect(await packageTracker.isProducer(producer.address)).to.equal(false)
+            await packageTracker.connect(manager).setProducer(producer.address)
+            expect(await packageTracker.isProducer(producer.address)).to.equal(true)
         })
     })
 })
