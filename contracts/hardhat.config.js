@@ -3,12 +3,28 @@ require("hardhat-gas-reporter")
 require("dotenv").config()
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
+const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
 
 module.exports = {
-    defaultNetwork: "hardhat",
-
+    defaultNetwork: "goerli_fork",
+    networks: {
+        hardhat: {},
+        goerli_fork: {
+            url: "http://127.0.0.1:8545",
+            chainId: 31337,
+            forking: {
+                url: GOERLI_RPC_URL,
+            },
+        },
+        goerli: {
+            chainId: 4,
+            url: GOERLI_RPC_URL || "",
+            accounts: [PRIVATE_KEY],
+            blockConfirmations: 6,
+        },
+    },
     gasReporter: {
         enabled: true,
         outputFile: "gas-report.txt",
