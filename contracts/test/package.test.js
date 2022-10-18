@@ -9,6 +9,14 @@ const DECIMALS = "18"
 const INITIAL_PRICE = ethers.utils.parseUnits("2000", "ether")
 const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("1")
 
+const FIRST_TOKEN = 0
+
+const NOT_MINTED = 0
+const MINTED = 1
+const PRODUCED = 2
+const IN_STOCK = 3
+const SOLD = 4
+
 describe("Package", function () {
     let packageTracker, vrgCoordinatorV2Mock
     let owner, manager, producer, suplier, user
@@ -80,7 +88,7 @@ describe("Package", function () {
         })
     })
 
-    xdescribe("setManager", async function () {
+    describe("setManager", async function () {
         it("reverted if called by not owner", async function () {
             expect(await packageTracker.isManager(manager.address)).to.equal(false)
             await expect(
@@ -95,7 +103,7 @@ describe("Package", function () {
         })
     })
 
-    xdescribe("resetManager", async function () {
+    describe("resetManager", async function () {
         beforeEach(async function () {
             await packageTracker.setManager(manager.address)
             await packageTracker.connect(manager).setProducer(producer.address)
@@ -115,7 +123,7 @@ describe("Package", function () {
         })
     })
 
-    xdescribe("setProducer", async function () {
+    describe("setProducer", async function () {
         it("reverted if called by not manager", async function () {
             expect(await packageTracker.isProducer(producer.address)).to.equal(false)
             await expect(
@@ -131,7 +139,7 @@ describe("Package", function () {
         })
     })
 
-    xdescribe("resetProducer", async function () {
+    describe("resetProducer", async function () {
         beforeEach(async function () {
             await packageTracker.setManager(manager.address)
             await packageTracker.connect(manager).setProducer(producer.address)
@@ -151,7 +159,7 @@ describe("Package", function () {
         })
     })
 
-    xdescribe("setSuplier", async function () {
+    describe("setSuplier", async function () {
         it("reverted if called by not manager", async function () {
             expect(await packageTracker.isSuplier(suplier.address)).to.equal(false)
             await expect(
@@ -167,7 +175,7 @@ describe("Package", function () {
         })
     })
 
-    xdescribe("resetSuplier", async function () {
+    describe("resetSuplier", async function () {
         beforeEach(async function () {
             await packageTracker.setManager(manager.address)
             await packageTracker.connect(manager).setSuplier(suplier.address)
@@ -186,33 +194,172 @@ describe("Package", function () {
             expect(await packageTracker.isSuplier(suplier.address)).to.equal(false)
         })
     })
-
-    describe("mintNft", async function () {
+    describe("token", async function () {
         beforeEach(async function () {
             await packageTracker.setManager(manager.address)
             await packageTracker.connect(manager).setSuplier(suplier.address)
             await packageTracker.connect(manager).setProducer(producer.address)
         })
-
-        it("reverted if called by not producer", async function () {
-            await expect(packageTracker.connect(user).mintNft(1)).to.be.revertedWith(
-                "Caller is not the producer"
-            )
+        describe("not minted token", async function () {
+            it("token state not minted", async function () {
+                const details = await packageTracker.getTokenDetails(FIRST_TOKEN)
+                expect(details.state).to.equal(NOT_MINTED)
+            })
         })
-        it("producer can request mint", async function () {
-            await expect(packageTracker.connect(producer).mintNft(1)).to.emit(
-                packageTracker,
-                "TokenRequested"
-            )
-        })
-        it("packageTracker recieve random number and mint token", async function () {
-            const transferTx = await packageTracker.connect(producer).mintNft(1)
-            const result = await transferTx.wait()
-            const id = result.events[1].args.requestId
 
-            await expect(
-                vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
-            ).to.emit(packageTracker, "TokenMinted")
+        describe("mintNft", async function () {
+            it("reverted if called by not producer", async function () {
+                await expect(packageTracker.connect(user).mintNft(1)).to.be.revertedWith(
+                    "Caller is not the producer"
+                )
+            })
+            it("producer can request mint", async function () {
+                await expect(packageTracker.connect(producer).mintNft(1)).to.emit(
+                    packageTracker,
+                    "TokenRequested"
+                )
+            })
+            it("packageTracker recieve random number and mint token", async function () {
+                const transferTx = await packageTracker.connect(producer).mintNft(1)
+                const result = await transferTx.wait()
+                const id = result.events[1].args.requestId
+
+                await expect(
+                    vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
+                ).to.emit(packageTracker, "TokenMinted")
+            })
+
+            it("token state is minted", async function () {
+                const transferTx = await packageTracker.connect(producer).mintNft(1)
+                const result = await transferTx.wait()
+                const id = result.events[1].args.requestId
+
+                await expect(
+                    vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
+                ).to.emit(packageTracker, "TokenMinted")
+
+                const details = await packageTracker.getTokenDetails(FIRST_TOKEN)
+                expect(details.state).to.equal(MINTED)
+            })
+        })
+
+        describe("setProductionTimestamp", async function () {
+            it("reverted if caller is not the producer", async function () {
+                await expect(
+                    packageTracker.connect(user).setProductionTimestamp(FIRST_TOKEN)
+                ).to.be.revertedWith("Caller is not the producer")
+            })
+            it("reverted if token is not minted", async function () {
+                await expect(
+                    packageTracker.connect(producer).setProductionTimestamp(FIRST_TOKEN)
+                ).to.be.revertedWith("Token not ready to produce")
+            })
+            it("production timestamp claimed", async function () {
+                const transferTx = await packageTracker.connect(producer).mintNft(1)
+                const result = await transferTx.wait()
+                const id = result.events[1].args.requestId
+
+                await expect(
+                    vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
+                ).to.emit(packageTracker, "TokenMinted")
+
+                await expect(
+                    packageTracker.connect(producer).setProductionTimestamp(FIRST_TOKEN)
+                ).to.emit(packageTracker, "TokenPoduced")
+                const details = await packageTracker.getTokenDetails(FIRST_TOKEN)
+                expect(details.state).to.equal(PRODUCED)
+            })
+        })
+        describe("setInStockTimestamp", async function () {
+            it("reverted if caller is not the suplier", async function () {
+                await expect(
+                    packageTracker.connect(user).setInStockTimestamp(FIRST_TOKEN)
+                ).to.be.revertedWith("Caller is not the suplier")
+            })
+            it("reverted if token is not minted", async function () {
+                await expect(
+                    packageTracker.connect(suplier).setInStockTimestamp(FIRST_TOKEN)
+                ).to.be.revertedWith("Token not ready to move in stock")
+            })
+            it("in stock timestamp claimed", async function () {
+                const transferTx = await packageTracker.connect(producer).mintNft(1)
+                const result = await transferTx.wait()
+                const id = result.events[1].args.requestId
+
+                await expect(
+                    vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
+                ).to.emit(packageTracker, "TokenMinted")
+
+                await expect(
+                    packageTracker.connect(producer).setProductionTimestamp(FIRST_TOKEN)
+                ).to.emit(packageTracker, "TokenPoduced")
+
+                await expect(
+                    packageTracker.connect(suplier).setInStockTimestamp(FIRST_TOKEN)
+                ).to.emit(packageTracker, "TokenInStock")
+
+                const details = await packageTracker.getTokenDetails(FIRST_TOKEN)
+                expect(details.state).to.equal(IN_STOCK)
+            })
+        })
+
+        describe("setSoldTimestamp", async function () {
+            it("reverted if caller is not the suplier", async function () {
+                await expect(
+                    packageTracker.connect(user).setSoldTimestamp(FIRST_TOKEN)
+                ).to.be.revertedWith("Caller is not the suplier")
+            })
+            it("reverted if token is not minted", async function () {
+                await expect(
+                    packageTracker.connect(suplier).setSoldTimestamp(FIRST_TOKEN)
+                ).to.be.revertedWith("Token not ready to sale")
+            })
+            it("sold timestamp claimed after production", async function () {
+                const transferTx = await packageTracker.connect(producer).mintNft(1)
+                const result = await transferTx.wait()
+                const id = result.events[1].args.requestId
+
+                await expect(
+                    vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
+                ).to.emit(packageTracker, "TokenMinted")
+
+                await expect(
+                    packageTracker.connect(producer).setProductionTimestamp(FIRST_TOKEN)
+                ).to.emit(packageTracker, "TokenPoduced")
+
+                await expect(packageTracker.connect(suplier).setSoldTimestamp(FIRST_TOKEN)).to.emit(
+                    packageTracker,
+                    "TokenSold"
+                )
+
+                const details = await packageTracker.getTokenDetails(FIRST_TOKEN)
+                expect(details.state).to.equal(SOLD)
+            })
+
+            it("sold timestamp claimed after move in stock", async function () {
+                const transferTx = await packageTracker.connect(producer).mintNft(1)
+                const result = await transferTx.wait()
+                const id = result.events[1].args.requestId
+
+                await expect(
+                    vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
+                ).to.emit(packageTracker, "TokenMinted")
+
+                await expect(
+                    packageTracker.connect(producer).setProductionTimestamp(FIRST_TOKEN)
+                ).to.emit(packageTracker, "TokenPoduced")
+
+                await expect(
+                    packageTracker.connect(suplier).setInStockTimestamp(FIRST_TOKEN)
+                ).to.emit(packageTracker, "TokenInStock")
+                await expect(packageTracker.connect(suplier).setSoldTimestamp(FIRST_TOKEN)).to.emit(
+                    packageTracker,
+                    "TokenSold"
+                )
+
+                const details = await packageTracker.getTokenDetails(FIRST_TOKEN)
+                expect(details.state).to.equal(SOLD)
+            })
         })
     })
 })

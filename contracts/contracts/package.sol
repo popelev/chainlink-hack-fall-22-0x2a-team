@@ -109,6 +109,8 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
             s_tokenUniqueIds[random] = newTokenId;
             _safeMint(tokenOwner, newTokenId);
             s_tokenDetails[newTokenId].state = TokenState.MINTED;
+            s_tokenDetails[newTokenId].uniqueId = random;
+
             emit TokenMinted(newTokenId, random);
         }
         s_tokenCounter = newTokenId;
