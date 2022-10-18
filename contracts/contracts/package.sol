@@ -85,7 +85,7 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     //     requestId = mintNft(1);
     // }
 
-    function mintNft(uint32 countOfNft) public onlyProducer returns (uint256 requestId) {
+    function mintNft(uint32 countOfNft) external onlyProducer returns (uint256 requestId) {
         require(countOfNft < 500);
         requestId = i_vrfCoordinator.requestRandomWords(
             i_gasLane,

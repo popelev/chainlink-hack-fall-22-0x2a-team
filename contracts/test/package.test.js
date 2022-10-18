@@ -7,7 +7,7 @@ const BASE_FEE = ethers.utils.parseEther("0.25").toHexString() // 0.25 LINK per 
 const GAS_PRICE_LINK = 1e9
 const DECIMALS = "18"
 const INITIAL_PRICE = ethers.utils.parseUnits("2000", "ether")
-const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("0.01")
+const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("1")
 
 describe("Package", function () {
     let packageTracker, vrgCoordinatorV2Mock
@@ -199,11 +199,20 @@ describe("Package", function () {
                 "Caller is not the producer"
             )
         })
-        it("producer can mint", async function () {
+        it("producer can request mint", async function () {
             await expect(packageTracker.connect(producer).mintNft(1)).to.emit(
                 packageTracker,
                 "TokenRequested"
             )
+        })
+        it("packageTracker recieve random number and mint token", async function () {
+            const transferTx = await packageTracker.connect(producer).mintNft(1)
+            const result = await transferTx.wait()
+            const id = result.events[1].args.requestId
+
+            await expect(
+                vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
+            ).to.emit(packageTracker, "TokenMinted")
         })
     })
 })
