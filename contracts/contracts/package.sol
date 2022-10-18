@@ -81,11 +81,11 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     }
 
     /* PUBLIC FUNCTIONS */
-    function mintNft() external returns (uint256 requestId) {
-        requestId = mintNft(1);
-    }
+    // function mintNft() external returns (uint256 requestId) {
+    //     requestId = mintNft(1);
+    // }
 
-    function mintNft(uint32 countOfNft) public onlyOwner returns (uint256 requestId) {
+    function mintNft(uint32 countOfNft) public onlyProducer returns (uint256 requestId) {
         require(countOfNft < 500);
         requestId = i_vrfCoordinator.requestRandomWords(
             i_gasLane,
@@ -210,6 +210,10 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     function getVrfCoordinatorAddress() public view returns (address) {
         return address(i_vrfCoordinator);
+    }
+
+    function getVrfCoordinatorSubId() public view returns (uint64) {
+        return i_subscriptionId;
     }
 
     function getTokenCounter() public view returns (uint256) {
