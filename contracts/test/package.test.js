@@ -9,7 +9,7 @@ const DECIMALS = "18"
 const INITIAL_PRICE = ethers.utils.parseUnits("2000", "ether")
 const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("1")
 
-const FIRST_TOKEN = 0
+const FIRST_TOKEN = 1
 
 const NOT_MINTED = 0
 const MINTED = 1

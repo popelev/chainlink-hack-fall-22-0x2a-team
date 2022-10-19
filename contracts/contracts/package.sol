@@ -48,7 +48,7 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     mapping(uint256 => address) public s_requestIdSender;
 
     /* NFT varible */
-    uint256 public s_tokenCounter;
+    uint256 public s_tokenCounter = 1;
     mapping(uint256 => string) public s_imageUris;
     mapping(uint256 => string) public s_titles;
     mapping(uint256 => string) public s_descriptions;
