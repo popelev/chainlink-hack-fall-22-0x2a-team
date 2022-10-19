@@ -36,7 +36,7 @@ describe("Package", function () {
             value: 0,
         })
         const txResponse = await vrgCoordinatorV2Mock.createSubscription()
-        const txReceipt = await txResponse.wait()
+        const txReceipt = await txResponse.wait(1)
         subscriptionId = txReceipt.events[0].args.subId
         await vrgCoordinatorV2Mock.fundSubscription(subscriptionId, VRF_SUB_FUND_AMOUNT)
         const gasLane = networkConfig[chainId]["gasLane"]
@@ -221,17 +221,20 @@ describe("Package", function () {
             })
             it("packageTracker recieve random number and mint token", async function () {
                 const transferTx = await packageTracker.connect(producer).mintNft(1)
-                const result = await transferTx.wait()
+                const result = await transferTx.wait(1)
                 const id = result.events[1].args.requestId
 
                 await expect(
                     vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
                 ).to.emit(packageTracker, "TokenMinted")
+
+                const count = await packageTracker.getTokenCounter()
+                expect(count.toNumber()).to.equal(1)
             })
 
             it("token state is minted", async function () {
                 const transferTx = await packageTracker.connect(producer).mintNft(1)
-                const result = await transferTx.wait()
+                const result = await transferTx.wait(1)
                 const id = result.events[1].args.requestId
 
                 await expect(
@@ -256,7 +259,7 @@ describe("Package", function () {
             })
             it("production timestamp claimed", async function () {
                 const transferTx = await packageTracker.connect(producer).mintNft(1)
-                const result = await transferTx.wait()
+                const result = await transferTx.wait(1)
                 const id = result.events[1].args.requestId
 
                 await expect(
@@ -283,7 +286,7 @@ describe("Package", function () {
             })
             it("in stock timestamp claimed", async function () {
                 const transferTx = await packageTracker.connect(producer).mintNft(1)
-                const result = await transferTx.wait()
+                const result = await transferTx.wait(1)
                 const id = result.events[1].args.requestId
 
                 await expect(
@@ -316,7 +319,7 @@ describe("Package", function () {
             })
             it("sold timestamp claimed after production", async function () {
                 const transferTx = await packageTracker.connect(producer).mintNft(1)
-                const result = await transferTx.wait()
+                const result = await transferTx.wait(1)
                 const id = result.events[1].args.requestId
 
                 await expect(
@@ -338,7 +341,7 @@ describe("Package", function () {
 
             it("sold timestamp claimed after move in stock", async function () {
                 const transferTx = await packageTracker.connect(producer).mintNft(1)
-                const result = await transferTx.wait()
+                const result = await transferTx.wait(1)
                 const id = result.events[1].args.requestId
 
                 await expect(

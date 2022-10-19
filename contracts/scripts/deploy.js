@@ -1,4 +1,9 @@
-const { network, ether } = require("hardhat")
+const { network, ethers } = require("hardhat")
+const { networkConfig } = require("../helper-hardhat-config")
+
+const BASE_FEE = ethers.utils.parseEther("0.25").toHexString() // 0.25 LINK per request
+const GAS_PRICE_LINK = 1e9
+const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("1")
 
 async function main() {
     const [Owner, Manager, Producer, Suplier, User] = await ethers.getSigners()
@@ -36,9 +41,9 @@ async function main() {
     await packageTracker.connect(manager).setProducer(producer.address)
     await packageTracker.connect(producer).mintNft(1)
 
-    console.log(`Ruble ERC20 contract deployed to ${ruble.address}`)
+    console.log(`Package Tracker contract deployed to ${packageTracker.address}`)
+    console.log(`VRF contract deployed to ${vrgCoordinatorV2Mock.address}`)
 }
-
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {

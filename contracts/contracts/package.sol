@@ -48,7 +48,7 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     mapping(uint256 => address) public s_requestIdSender;
 
     /* NFT varible */
-    uint256 public s_tokenCounter = 1;
+    uint256 public s_tokenCounter = 0;
     mapping(uint256 => string) public s_imageUris;
     mapping(uint256 => string) public s_titles;
     mapping(uint256 => string) public s_descriptions;
@@ -104,7 +104,7 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint256 newTokenId = s_tokenCounter;
 
         for (uint256 i = 0; i < randomWords.length; i++) {
-            newTokenId += newTokenId;
+            newTokenId = newTokenId + 1;
             uint256 random = randomWords[i];
             s_tokenUniqueIds[random] = newTokenId;
             _safeMint(tokenOwner, newTokenId);
