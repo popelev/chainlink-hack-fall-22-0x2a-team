@@ -1,5 +1,8 @@
-import ethers from "ethers";
+import { ethers, BigNumber } from "ethers";
+
 import Package from "./contracts/PackageToken.json" assert { type: "json" };
+import VRFCoordinatorV2Mock from "./contracts/VRFCoordinatorV2Mock.json" assert { type: "json" };
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -10,6 +13,7 @@ const PRODUCER_PK = process.env.PRODUCER_PK;
 const SUPLIER_PK = process.env.SUPLIER_PK;
 const USER_PK = process.env.USER_PK;
 const PACKAGE_TRACKER_ADDRESS = process.env.PACKAGE_TRACKER_ADDRESS;
+const VRF_ADDRESS = process.env.VRF_ADDRESS;
 
 class Answer {
   constructor(answer) {
@@ -33,6 +37,12 @@ class Postcontroller {
       const TokenContract = new ethers.Contract(
         PACKAGE_TRACKER_ADDRESS,
         Package.abi,
+        provider
+      );
+
+      const VRFConsumerBase = new ethers.Contract(
+        VRF_ADDRESS,
+        VRFCoordinatorV2Mock.abi,
         provider
       );
 
@@ -65,7 +75,18 @@ class Postcontroller {
         scanAnswer = await ContractByUser.getTokenDetails(tokenId);
       } else if (request.account == "producer") {
         const ContractByProducer = TokenContract.connect(producerWallet);
-        if (request.type == "produce") {
+        const vrgCoordinatorV2Mock = VRFConsumerBase.connect(ownerWallet);
+        if (request.type == "mint") {
+          const transferTx = await ContractByProducer.mintNft(1);
+          const result = await transferTx.wait(1);
+          const id = result.events[1].args.requestId;
+          await vrgCoordinatorV2Mock.fulfillRandomWords(
+            id,
+            TokenContract.address
+          );
+          const count = await ContractByProducer.getTokenCounter();
+          scanAnswer = await ContractByProducer.getTokenDetails(count);
+        } else if (request.type == "produce") {
           const tx = await ContractByProducer.setProductionTimestamp(tokenId);
           //await tx.wait();
           scanAnswer = await ContractByProducer.getTokenDetails(tokenId);
@@ -84,6 +105,7 @@ class Postcontroller {
 
       let success = scanAnswer.state > 0;
       if (success) {
+        answerBody.qr = scanAnswer.uniqueId.toString();
         answerBody.success = success;
         answerBody.produced = scanAnswer.state >= 2;
         answerBody.inShop = scanAnswer.state >= 3;
