@@ -1,9 +1,9 @@
 const { network, ethers } = require("hardhat")
 const { networkConfig } = require("../helper-hardhat-config")
 
-const BASE_FEE = ethers.utils.parseEther("0.25").toHexString() // 0.25 LINK per request
+const BASE_FEE = ethers.utils.parseEther("0.01").toHexString() // 0.25 LINK per request
 const GAS_PRICE_LINK = 1e9
-const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("1")
+const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("100")
 
 async function main() {
     const [Owner, Manager, Producer, Suplier, User] = await ethers.getSigners()
