@@ -23,6 +23,24 @@ class Answer {
 
 class Postcontroller {
   async JsonParse(req, res) {
+    let request = req.body;
+
+    let answerBody = {
+      answerId: request.id,
+      qr: request.qr,
+      success: false,
+      imageLink: "",
+      blockchainLink: "",
+      name: "",
+      produced: false,
+      producedDate: "",
+      inShop: false,
+      inShopDate: "",
+      sold: false,
+      soldDate: "",
+    };
+    let scanAnswer;
+
     try {
       // PREPARING
       const provider = new ethers.providers.JsonRpcProvider();
@@ -46,30 +64,12 @@ class Postcontroller {
         provider
       );
 
-      let request = req.body;
-
-      let answerBody = {
-        answerId: request.id,
-        qr: request.qr,
-        success: false,
-        imageLink: "",
-        blockchainLink: "",
-        name: "Not Found",
-        produced: false,
-        producedDate: "",
-        inShop: false,
-        inShopDate: "",
-        Sold: false,
-        soldDate: "",
-      };
-
       // LOGIC
       //const ContractByOwner = TokenContract.connect(ownerWallet);
       //const ContractByManager = TokenContract.connect(managerWallet);
 
       const ContractByUser = TokenContract.connect(userWallet);
       let tokenId = await ContractByUser.getTokenNumberByUniqueId(request.qr);
-      let scanAnswer;
 
       if (request.type == "scan") {
         scanAnswer = await ContractByUser.getTokenDetails(tokenId);
@@ -108,16 +108,28 @@ class Postcontroller {
         answerBody.qr = scanAnswer.uniqueId.toString();
         answerBody.success = success;
         answerBody.produced = scanAnswer.state >= 2;
+        if (answerBody.produced) {
+          answerBody.producedDate = new Date(scanAnswer.producedTime * 1000);
+        }
         answerBody.inShop = scanAnswer.state >= 3;
-        answerBody.Sold = scanAnswer.state >= 4;
+        if (answerBody.inShop) {
+          answerBody.inShopDate = new Date(scanAnswer.inStockTime * 1000);
+        }
+
+        answerBody.sold = scanAnswer.state >= 4;
+        if (answerBody.sold) {
+          answerBody.soldDate = new Date(scanAnswer.soldTime * 1000);
+        }
+      } else {
+        answerBody.name = "Not Found";
       }
 
       // ANSWER
-      let answer = new Answer(answerBody);
-      res.status(200).json(answer);
     } catch (e) {
       console.log(e);
+      answerBody.problem = e;
     }
+    res.status(200).json(new Answer(answerBody));
   }
 }
 
