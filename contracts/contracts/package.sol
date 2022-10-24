@@ -48,12 +48,12 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     mapping(uint256 => address) public s_requestIdSender;
 
     /* NFT varible */
-    uint256 public s_tokenCounter = 0;
-    mapping(uint256 => string) public s_imageUris;
-    mapping(uint256 => string) public s_titles;
-    mapping(uint256 => string) public s_descriptions;
-    mapping(uint256 => uint256) public s_tokenUniqueIds;
-    mapping(uint256 => TokenDetails) public s_tokenDetails;
+    uint256 private s_tokenCounter = 0;
+    mapping(uint256 => string) private s_imageUris;
+    mapping(uint256 => string) private s_titles;
+    mapping(uint256 => string) private s_descriptions;
+    mapping(uint256 => uint256) private s_tokenUniqueIds;
+    mapping(uint256 => TokenDetails) private s_tokenDetails;
 
     /* Token state Events */
     event TokenRequested(uint256 indexed requestId, address requester);
@@ -172,6 +172,29 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         emit TokenPoduced(index, timestamp);
     }
 
+    function setTokenImageUri(uint256 tokenIndex, uint256 imageUriId) external onlyProducer {
+        s_tokenDetails[tokenIndex].imageUriId = imageUriId;
+    }
+
+    function setTokenTitle(uint256 tokenIndex, uint256 titleId) external onlyProducer {
+        s_tokenDetails[tokenIndex].titleId = titleId;
+    }
+
+    function setTokenDescription(uint256 tokenIndex, uint256 descriptionId) external onlyProducer {
+        s_tokenDetails[tokenIndex].descriptionId = descriptionId;
+    }
+
+    function setTokenDetails(
+        uint256 tokenIndex,
+        uint256 imageUriId,
+        uint256 titleId,
+        uint256 descriptionId
+    ) external onlyProducer {
+        s_tokenDetails[tokenIndex].imageUriId = imageUriId;
+        s_tokenDetails[tokenIndex].titleId = titleId;
+        s_tokenDetails[tokenIndex].descriptionId = descriptionId;
+    }
+
     /* SUPLIER SETTERS */
     function setInStockTimestamp(uint256 index) external onlySuplier {
         require(
@@ -205,9 +228,16 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return i_gasLane;
     }
 
-    function getTokenURI(uint256 index) public view returns (string memory) {
-        uint256 imageUriId = s_tokenDetails[index].imageUriId;
-        return s_imageUris[imageUriId];
+    function getImageURI(uint256 index) public view returns (string memory) {
+        return s_imageUris[index];
+    }
+
+    function getTitle(uint256 index) public view returns (string memory) {
+        return s_titles[index];
+    }
+
+    function getDescription(uint256 index) public view returns (string memory) {
+        return s_descriptions[index];
     }
 
     function getVrfCoordinatorAddress() public view returns (address) {
@@ -224,6 +254,10 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     function getTokenNumberByUniqueId(uint256 id) public view returns (uint256) {
         return s_tokenUniqueIds[id];
+    }
+
+    function getTokenDetailsByUniqueId(uint256 id) public view returns (TokenDetails memory) {
+        return s_tokenDetails[s_tokenUniqueIds[id]];
     }
 
     function getTokenDetails(uint256 index) public view returns (TokenDetails memory) {

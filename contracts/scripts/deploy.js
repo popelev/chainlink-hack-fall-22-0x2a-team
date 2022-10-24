@@ -1,9 +1,11 @@
 const { network, ethers } = require("hardhat")
 const { networkConfig } = require("../helper-hardhat-config")
+require("dotenv").config()
 
 const BASE_FEE = ethers.utils.parseEther("0.01").toHexString() // 0.25 LINK per request
 const GAS_PRICE_LINK = 1e9
 const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("100")
+const TEST_IMAGE_URI = process.env.TEST_IMAGE_URI
 
 async function main() {
     const [Owner, Manager, Producer, Suplier, User] = await ethers.getSigners()
@@ -38,11 +40,21 @@ async function main() {
 
     await packageTracker.setManager(manager.address)
     await packageTracker.connect(manager).setSuplier(suplier.address)
-    await packageTracker.connect(manager).setProducer(producer.address)
-    await packageTracker.connect(producer).mintNft(1)
 
+    await packageTracker.connect(manager).setProducer(producer.address)
+    await packageTracker.connect(manager).setImageUriInList(1, TEST_IMAGE_URI)
+    await packageTracker.connect(manager).setTitleInList(1, "Test title")
+    await packageTracker.connect(manager).setDescriptionInList(1, "Test Description")
+
+    const transferTx = await packageTracker.connect(producer).mintNft(1)
+    const result = await transferTx.wait(1)
+    const id = result.events[1].args.requestId
+    await vrgCoordinatorV2Mock.fulfillRandomWords(id, packageTracker.address)
+
+    await packageTracker.connect(producer).setTokenDetails(1, 1, 1, 1)
     console.log(`Package Tracker contract deployed to ${packageTracker.address}`)
     console.log(`VRF contract deployed to ${vrgCoordinatorV2Mock.address}`)
+    console.log(`First token details ${await packageTracker.getTokenDetails(1)}`)
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
