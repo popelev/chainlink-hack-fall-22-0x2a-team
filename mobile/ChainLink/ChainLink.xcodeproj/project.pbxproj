@@ -13,6 +13,7 @@
 		0489EA1F290EE43800665DF9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0489EA1D290EE43800665DF9 /* Main.storyboard */; };
 		0489EA21290EE43900665DF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0489EA20290EE43900665DF9 /* Assets.xcassets */; };
 		0489EA24290EE43900665DF9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0489EA22290EE43900665DF9 /* LaunchScreen.storyboard */; };
+		04B2B587290F07A0001B7107 /* UserType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2B586290F07A0001B7107 /* UserType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		0489EA20290EE43900665DF9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0489EA23290EE43900665DF9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0489EA25290EE43900665DF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04B2B586290F07A0001B7107 /* UserType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				0489EA17290EE43800665DF9 /* AppDelegate.swift */,
 				0489EA19290EE43800665DF9 /* SceneDelegate.swift */,
+				04B2B588290F07A3001B7107 /* Model */,
 				0489EA2C290EE68900665DF9 /* Controller */,
 				0489EA2B290EE65800665DF9 /* View */,
 				0489EA20290EE43900665DF9 /* Assets.xcassets */,
@@ -81,6 +84,14 @@
 				0489EA1B290EE43800665DF9 /* LoginViewController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		04B2B588290F07A3001B7107 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				04B2B586290F07A0001B7107 /* UserType.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,6 +167,7 @@
 			files = (
 				0489EA1C290EE43800665DF9 /* LoginViewController.swift in Sources */,
 				0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */,
+				04B2B587290F07A0001B7107 /* UserType.swift in Sources */,
 				0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
