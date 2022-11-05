@@ -10,6 +10,9 @@
 		041AF2B62916B97800B012E7 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2B52916B97700B012E7 /* QRCodeViewController.swift */; };
 		041AF2B92916B9EC00B012E7 /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 041AF2B82916B9EC00B012E7 /* QRScanner */; };
 		041AF2BC2916BA0800B012E7 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 041AF2BB2916BA0800B012E7 /* SDWebImage */; };
+		041AF2C12916BAEE00B012E7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2BE2916BAEE00B012E7 /* Constants.swift */; };
+		041AF2C22916BAEE00B012E7 /* Routable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2BF2916BAEE00B012E7 /* Routable.swift */; };
+		041AF2C32916BAEE00B012E7 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2C02916BAEE00B012E7 /* Loadable.swift */; };
 		0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA17290EE43800665DF9 /* AppDelegate.swift */; };
 		0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA19290EE43800665DF9 /* SceneDelegate.swift */; };
 		0489EA1C290EE43800665DF9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA1B290EE43800665DF9 /* LoginViewController.swift */; };
@@ -21,6 +24,9 @@
 
 /* Begin PBXFileReference section */
 		041AF2B52916B97700B012E7 /* QRCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
+		041AF2BE2916BAEE00B012E7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		041AF2BF2916BAEE00B012E7 /* Routable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routable.swift; sourceTree = "<group>"; };
+		041AF2C02916BAEE00B012E7 /* Loadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
 		0489EA14290EE43800665DF9 /* ChainLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChainLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0489EA17290EE43800665DF9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0489EA19290EE43800665DF9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +51,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		041AF2BD2916BAEE00B012E7 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				041AF2BE2916BAEE00B012E7 /* Constants.swift */,
+				041AF2BF2916BAEE00B012E7 /* Routable.swift */,
+				041AF2C02916BAEE00B012E7 /* Loadable.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		0489EA0B290EE43800665DF9 = {
 			isa = PBXGroup;
 			children = (
@@ -66,6 +82,7 @@
 			children = (
 				0489EA17290EE43800665DF9 /* AppDelegate.swift */,
 				0489EA19290EE43800665DF9 /* SceneDelegate.swift */,
+				041AF2BD2916BAEE00B012E7 /* Common */,
 				04B2B588290F07A3001B7107 /* Model */,
 				0489EA2C290EE68900665DF9 /* Controller */,
 				0489EA2B290EE65800665DF9 /* View */,
@@ -181,10 +198,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0489EA1C290EE43800665DF9 /* LoginViewController.swift in Sources */,
+				041AF2C22916BAEE00B012E7 /* Routable.swift in Sources */,
 				0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */,
 				04B2B587290F07A0001B7107 /* UserType.swift in Sources */,
 				0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */,
+				041AF2C32916BAEE00B012E7 /* Loadable.swift in Sources */,
 				041AF2B62916B97800B012E7 /* QRCodeViewController.swift in Sources */,
+				041AF2C12916BAEE00B012E7 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
