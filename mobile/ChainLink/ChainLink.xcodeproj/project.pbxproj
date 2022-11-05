@@ -13,6 +13,9 @@
 		041AF2C12916BAEE00B012E7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2BE2916BAEE00B012E7 /* Constants.swift */; };
 		041AF2C22916BAEE00B012E7 /* Routable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2BF2916BAEE00B012E7 /* Routable.swift */; };
 		041AF2C32916BAEE00B012E7 /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2C02916BAEE00B012E7 /* Loadable.swift */; };
+		041AF2C62916BB5E00B012E7 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2C52916BB5E00B012E7 /* NetworkService.swift */; };
+		041AF2C82916BB8500B012E7 /* NetworkResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2C72916BB8500B012E7 /* NetworkResponseModel.swift */; };
+		041AF2CA2916BB8C00B012E7 /* ActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2C92916BB8C00B012E7 /* ActionType.swift */; };
 		0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA17290EE43800665DF9 /* AppDelegate.swift */; };
 		0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA19290EE43800665DF9 /* SceneDelegate.swift */; };
 		0489EA1C290EE43800665DF9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA1B290EE43800665DF9 /* LoginViewController.swift */; };
@@ -27,6 +30,9 @@
 		041AF2BE2916BAEE00B012E7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		041AF2BF2916BAEE00B012E7 /* Routable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routable.swift; sourceTree = "<group>"; };
 		041AF2C02916BAEE00B012E7 /* Loadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
+		041AF2C52916BB5E00B012E7 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		041AF2C72916BB8500B012E7 /* NetworkResponseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkResponseModel.swift; sourceTree = "<group>"; };
+		041AF2C92916BB8C00B012E7 /* ActionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionType.swift; sourceTree = "<group>"; };
 		0489EA14290EE43800665DF9 /* ChainLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChainLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0489EA17290EE43800665DF9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0489EA19290EE43800665DF9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +67,14 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		041AF2C42916BB5E00B012E7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				041AF2C52916BB5E00B012E7 /* NetworkService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		0489EA0B290EE43800665DF9 = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +97,7 @@
 				0489EA17290EE43800665DF9 /* AppDelegate.swift */,
 				0489EA19290EE43800665DF9 /* SceneDelegate.swift */,
 				041AF2BD2916BAEE00B012E7 /* Common */,
+				041AF2C42916BB5E00B012E7 /* Services */,
 				04B2B588290F07A3001B7107 /* Model */,
 				0489EA2C290EE68900665DF9 /* Controller */,
 				0489EA2B290EE65800665DF9 /* View */,
@@ -113,7 +128,9 @@
 		04B2B588290F07A3001B7107 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				041AF2C72916BB8500B012E7 /* NetworkResponseModel.swift */,
 				04B2B586290F07A0001B7107 /* UserType.swift */,
+				041AF2C92916BB8C00B012E7 /* ActionType.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -201,8 +218,11 @@
 				041AF2C22916BAEE00B012E7 /* Routable.swift in Sources */,
 				0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */,
 				04B2B587290F07A0001B7107 /* UserType.swift in Sources */,
+				041AF2C62916BB5E00B012E7 /* NetworkService.swift in Sources */,
+				041AF2CA2916BB8C00B012E7 /* ActionType.swift in Sources */,
 				0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */,
 				041AF2C32916BAEE00B012E7 /* Loadable.swift in Sources */,
+				041AF2C82916BB8500B012E7 /* NetworkResponseModel.swift in Sources */,
 				041AF2B62916B97800B012E7 /* QRCodeViewController.swift in Sources */,
 				041AF2C12916BAEE00B012E7 /* Constants.swift in Sources */,
 			);

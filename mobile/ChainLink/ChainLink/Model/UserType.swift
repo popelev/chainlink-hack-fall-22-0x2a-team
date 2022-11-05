@@ -2,7 +2,7 @@
 //  UserType.swift
 //  ChainLink
 //
-//  Created by Artem on 31.10.2022.
+//  Created by Artem on 04.11.2022.
 //
 
 enum UserType: Int {
