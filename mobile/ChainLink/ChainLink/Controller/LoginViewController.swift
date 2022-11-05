@@ -66,9 +66,9 @@ class LoginViewController: UIViewController {
         signingIn = true
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
           self.signingIn = false
-//            let QRCodeVC = QRCodeViewController.instantiate(fromStoryboard: "Main")
-//            QRCodeVC.userType = self.userType
-//            self.present(QRCodeVC, animated: true)
+            let QRCodeVC = QRCodeViewController.instantiate(fromStoryboard: "Main")
+            QRCodeVC.userType = self.userType
+            self.navigationController?.pushViewController(QRCodeVC, animated: true)
         }
     }
 
