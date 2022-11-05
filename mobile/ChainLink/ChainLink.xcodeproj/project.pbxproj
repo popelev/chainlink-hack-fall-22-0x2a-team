@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		041AF2B62916B97800B012E7 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2B52916B97700B012E7 /* QRCodeViewController.swift */; };
+		041AF2B92916B9EC00B012E7 /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 041AF2B82916B9EC00B012E7 /* QRScanner */; };
+		041AF2BC2916BA0800B012E7 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 041AF2BB2916BA0800B012E7 /* SDWebImage */; };
 		0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA17290EE43800665DF9 /* AppDelegate.swift */; };
 		0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA19290EE43800665DF9 /* SceneDelegate.swift */; };
 		0489EA1C290EE43800665DF9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA1B290EE43800665DF9 /* LoginViewController.swift */; };
@@ -17,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		041AF2B52916B97700B012E7 /* QRCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		0489EA14290EE43800665DF9 /* ChainLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChainLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0489EA17290EE43800665DF9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0489EA19290EE43800665DF9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -33,6 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				041AF2BC2916BA0800B012E7 /* SDWebImage in Frameworks */,
+				041AF2B92916B9EC00B012E7 /* QRScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				0489EA1B290EE43800665DF9 /* LoginViewController.swift */,
+				041AF2B52916B97700B012E7 /* QRCodeViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -110,6 +117,10 @@
 			dependencies = (
 			);
 			name = ChainLink;
+			packageProductDependencies = (
+				041AF2B82916B9EC00B012E7 /* QRScanner */,
+				041AF2BB2916BA0800B012E7 /* SDWebImage */,
+			);
 			productName = ChainLink;
 			productReference = 0489EA14290EE43800665DF9 /* ChainLink.app */;
 			productType = "com.apple.product-type.application";
@@ -138,6 +149,10 @@
 				Base,
 			);
 			mainGroup = 0489EA0B290EE43800665DF9;
+			packageReferences = (
+				041AF2B72916B9EC00B012E7 /* XCRemoteSwiftPackageReference "QRScanner" */,
+				041AF2BA2916BA0800B012E7 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+			);
 			productRefGroup = 0489EA15290EE43800665DF9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -169,6 +184,7 @@
 				0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */,
 				04B2B587290F07A0001B7107 /* UserType.swift in Sources */,
 				0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */,
+				041AF2B62916B97800B012E7 /* QRCodeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,6 +402,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		041AF2B72916B9EC00B012E7 /* XCRemoteSwiftPackageReference "QRScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mercari/QRScanner";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		041AF2BA2916BA0800B012E7 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		041AF2B82916B9EC00B012E7 /* QRScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 041AF2B72916B9EC00B012E7 /* XCRemoteSwiftPackageReference "QRScanner" */;
+			productName = QRScanner;
+		};
+		041AF2BB2916BA0800B012E7 /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 041AF2BA2916BA0800B012E7 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0489EA0C290EE43800665DF9 /* Project object */;
 }
