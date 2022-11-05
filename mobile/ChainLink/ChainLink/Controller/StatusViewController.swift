@@ -16,18 +16,21 @@ class StatusViewController: UIViewController, Routable {
     @IBOutlet weak var productImageView: UIImageView!
     @IBOutlet weak var productNameLabel: UILabel!
     @IBOutlet weak var productIdLabel: UILabel!
-//    @IBOutlet weak var produceStatusView: UIView!
+
     @IBOutlet weak var produceDateLabel: UILabel!
-//    @IBOutlet weak var storeStatusView: UIView!
     @IBOutlet weak var storeDateLabel: UILabel!
-//    @IBOutlet weak var soldStatusView: UIView!
     @IBOutlet weak var soldDateLabel: UILabel!
-    @IBOutlet weak var actionButton: CustomButton!
 
     @IBOutlet var statusViews: [UIView]!
+    @IBOutlet weak var statusStackView: UIStackView!
+    @IBOutlet weak var lineView: UIView!
+
+    @IBOutlet weak var actionButton: CustomButton!
 
 
     // MARK: - Properties
+
+    var onDidDisappear: (() -> Void)?
 
     var userType: UserType!
     var model: NetworkResponseModel!
@@ -43,7 +46,13 @@ class StatusViewController: UIViewController, Routable {
         drawSelf()
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
 
+        onDidDisappear?()
+    }
+
+    
     // MARK: - Drawing
 
     private func drawSelf() {
@@ -51,15 +60,30 @@ class StatusViewController: UIViewController, Routable {
         avatarImageView.image = UIImage(named: userType.userIdentifier)
 
         productImageView.sd_imageIndicator = SDWebImageActivityIndicator.gray
-        productImageView.sd_setImage(with: URL(string: "https://" + model.answer.imageLink))
+        productImageView.sd_setImage(with: URL(string: model.answer.imageLink))
         productNameLabel.text = model.answer.name
         productIdLabel.text = "id: " + model.answer.qr
-        actionButton.setTitle(model.answer.buttonTitle, for: .normal)
-        actionButton.isEnabled = model.answer.buttonEnable
+
         drawStatus()
+
         produceDateLabel.text = model.answer.producedDate
         storeDateLabel.text = model.answer.inShopDate
         soldDateLabel.text = model.answer.soldDate
+
+        actionButton.setTitle(model.answer.buttonTitle, for: .normal)
+        actionButton.isEnabled = model.answer.buttonEnable
+
+        if case .customer = userType {
+            actionButton.isHidden = true
+
+            if !model.answer.success {
+                statusStackView.isHidden = true
+                productIdLabel.isHidden = true
+                lineView.isHidden = true
+                productNameLabel.text = "Sorry, not found. Try again or ask supplier"
+                productImageView.image = UIImage(named: "icNotFound")
+            }
+        }
     }
 
     
@@ -79,7 +103,6 @@ class StatusViewController: UIViewController, Routable {
 
 
     private func performRequest(actionType: ActionType) {
-
         actionButton.startLoading()
 
         Task {
@@ -89,12 +112,10 @@ class StatusViewController: UIViewController, Routable {
                 actionButton.stopLoading()
                 self.model = model
                 drawSelf()
-                debugPrint("🟨 нажал на кнопку: ", model)
+
             } catch {
                 actionButton.stopLoading()
-                debugPrint("🔴", error)
                 showAlert(withMessage: error.localizedDescription)
-
             }
         }
     }
@@ -106,7 +127,6 @@ class StatusViewController: UIViewController, Routable {
 
         guard let index = model.states.firstIndex(of: false) else { return }
         let actionType = ActionType.allCases[index]
-        debugPrint("🔵", actionType)
         performRequest(actionType: actionType)
     }
 

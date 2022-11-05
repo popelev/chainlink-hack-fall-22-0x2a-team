@@ -63,7 +63,6 @@ class QRCodeViewController: UIViewController, Loadable, Routable {
     }
 
     private func setupQRScannerView() {
-        
         qrScannerView = QRScannerView(frame: view.bounds)
         view.addSubview(qrScannerView)
         qrScannerView.configure(delegate: self, input: .init(isBlurEffectEnabled: true))
@@ -72,7 +71,6 @@ class QRCodeViewController: UIViewController, Loadable, Routable {
     }
 
     private func fetchData(qrCode: String) {
-
         startLoading()
 
         Task {
@@ -83,18 +81,16 @@ class QRCodeViewController: UIViewController, Loadable, Routable {
                 let statusVC = StatusViewController.instantiate(fromStoryboard: "Main")
                 statusVC.userType = userType
                 statusVC.model = model
+
+                statusVC.onDidDisappear = { [qrScannerView] in
+                    qrScannerView?.rescan()
+                }
+
                 present(statusVC, animated: true)
-                qrScannerView.rescan()
-                debugPrint("✅", model)
+
             } catch {
                 stopLoading()
-                debugPrint("🔴", error)
-                //                showAlert(withMessage: error.localizedDescription)
-                
-//                let statusVC = StatusViewController.instantiate(fromStoryboard: "Main")
-//                statusVC.userType = userType
-//                statusVC.model = model
-//                present(statusVC, animated: true)
+                showAlert(withMessage: error.localizedDescription)
             }
         }
     }
@@ -114,13 +110,10 @@ class QRCodeViewController: UIViewController, Loadable, Routable {
 extension QRCodeViewController: QRScannerViewDelegate {
 
     func qrScannerView(_ qrScannerView: QRScannerView, didFailure error: QRScannerError) {
-
-        // showAlert(withMessage: error.localizedDescription)
-        fetchData(qrCode: "37470079394597546017821359402343014298469527652371950473243809108734949064165")
+         showAlert(withMessage: error.localizedDescription)
     }
 
     func qrScannerView(_ qrScannerView: QRScannerView, didSuccess code: String) {
-
         let code = parseQRCode(qrCode: code)
         fetchData(qrCode: code)
     }

@@ -422,11 +422,13 @@
                     <connections>
                         <outlet property="actionButton" destination="zR7-Wk-e09" id="jHC-35-aLp"/>
                         <outlet property="avatarImageView" destination="Pmv-01-XCD" id="2Ud-1I-wfo"/>
+                        <outlet property="lineView" destination="fwN-dY-dPH" id="3pS-Q7-hBy"/>
                         <outlet property="produceDateLabel" destination="HKe-ev-OHN" id="8zB-Sr-82Z"/>
                         <outlet property="productIdLabel" destination="SIL-du-6FW" id="Yn8-te-kdH"/>
                         <outlet property="productImageView" destination="CDZ-9f-a2V" id="zIQ-vJ-4oI"/>
                         <outlet property="productNameLabel" destination="41A-c7-IyC" id="ukf-Jk-VN2"/>
                         <outlet property="soldDateLabel" destination="FK5-w0-rmT" id="8CE-iK-5gc"/>
+                        <outlet property="statusStackView" destination="5Sn-co-AnL" id="a0L-2m-IcU"/>
                         <outlet property="storeDateLabel" destination="caF-0l-x9D" id="QtB-rH-k1j"/>
                         <outletCollection property="statusViews" destination="u3c-uN-xUb" collectionClass="NSMutableArray" id="PGn-FE-kJR"/>
                         <outletCollection property="statusViews" destination="ppy-0E-13i" collectionClass="NSMutableArray" id="BqC-NI-qoi"/>
