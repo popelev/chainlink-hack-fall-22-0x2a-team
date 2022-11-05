@@ -16,6 +16,8 @@
 		041AF2C62916BB5E00B012E7 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2C52916BB5E00B012E7 /* NetworkService.swift */; };
 		041AF2C82916BB8500B012E7 /* NetworkResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2C72916BB8500B012E7 /* NetworkResponseModel.swift */; };
 		041AF2CA2916BB8C00B012E7 /* ActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2C92916BB8C00B012E7 /* ActionType.swift */; };
+		041AF2CC2916BBD100B012E7 /* StatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2CB2916BBD100B012E7 /* StatusViewController.swift */; };
+		041AF2CE2916BC2E00B012E7 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041AF2CD2916BC2E00B012E7 /* CustomButton.swift */; };
 		0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA17290EE43800665DF9 /* AppDelegate.swift */; };
 		0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA19290EE43800665DF9 /* SceneDelegate.swift */; };
 		0489EA1C290EE43800665DF9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0489EA1B290EE43800665DF9 /* LoginViewController.swift */; };
@@ -33,6 +35,8 @@
 		041AF2C52916BB5E00B012E7 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		041AF2C72916BB8500B012E7 /* NetworkResponseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkResponseModel.swift; sourceTree = "<group>"; };
 		041AF2C92916BB8C00B012E7 /* ActionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionType.swift; sourceTree = "<group>"; };
+		041AF2CB2916BBD100B012E7 /* StatusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusViewController.swift; sourceTree = "<group>"; };
+		041AF2CD2916BC2E00B012E7 /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		0489EA14290EE43800665DF9 /* ChainLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChainLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0489EA17290EE43800665DF9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0489EA19290EE43800665DF9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				0489EA1D290EE43800665DF9 /* Main.storyboard */,
+				041AF2CD2916BC2E00B012E7 /* CustomButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -121,6 +126,7 @@
 			children = (
 				0489EA1B290EE43800665DF9 /* LoginViewController.swift */,
 				041AF2B52916B97700B012E7 /* QRCodeViewController.swift */,
+				041AF2CB2916BBD100B012E7 /* StatusViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -214,10 +220,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				041AF2CE2916BC2E00B012E7 /* CustomButton.swift in Sources */,
 				0489EA1C290EE43800665DF9 /* LoginViewController.swift in Sources */,
 				041AF2C22916BAEE00B012E7 /* Routable.swift in Sources */,
 				0489EA18290EE43800665DF9 /* AppDelegate.swift in Sources */,
 				04B2B587290F07A0001B7107 /* UserType.swift in Sources */,
+				041AF2CC2916BBD100B012E7 /* StatusViewController.swift in Sources */,
 				041AF2C62916BB5E00B012E7 /* NetworkService.swift in Sources */,
 				041AF2CA2916BB8C00B012E7 /* ActionType.swift in Sources */,
 				0489EA1A290EE43800665DF9 /* SceneDelegate.swift in Sources */,
