@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "qrscanner",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mercari/QRScanner",
+      "state" : {
+        "branch" : "master",
+        "revision" : "76fad5e944f26d17ce1beed17751ab6491c04018"
+      }
+    },
+    {
+      "identity" : "sdwebimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SDWebImage/SDWebImage",
+      "state" : {
+        "branch" : "master",
+        "revision" : "ddcf347c7dfaad3e8d6d81ac79e72b99118b48eb"
+      }
+    }
+  ],
+  "version" : 2
+}
