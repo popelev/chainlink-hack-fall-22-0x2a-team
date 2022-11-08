@@ -10,7 +10,7 @@ const INFURA_RPC_URL = process.env.INFURA_RPC_URL;
 const OWNER_PK = process.env.OWNER_PK;
 const MANAGER_PK = process.env.MANAGER_PK;
 const PRODUCER_PK = process.env.PRODUCER_PK;
-const SUPLIER_PK = process.env.SUPLIER_PK;
+const SUPPLIER_PK = process.env.SUPPLIER_PK;
 const USER_PK = process.env.USER_PK;
 const PACKAGE_TRACKER_ADDRESS = process.env.PACKAGE_TRACKER_ADDRESS;
 const VRF_ADDRESS = process.env.VRF_ADDRESS;
@@ -59,7 +59,7 @@ class Postcontroller {
       let ownerWallet = new ethers.Wallet(OWNER_PK, provider);
       let managerWallet = new ethers.Wallet(MANAGER_PK, provider);
       let producerWallet = new ethers.Wallet(PRODUCER_PK, provider);
-      let suplierWallet = new ethers.Wallet(SUPLIER_PK, provider);
+      let supplierWallet = new ethers.Wallet(SUPPLIER_PK, provider);
       let userWallet = new ethers.Wallet(USER_PK, provider);
 
       const TokenContract = new ethers.Contract(
@@ -93,6 +93,7 @@ class Postcontroller {
             TokenContract.address
           );
           const count = await ContractByProducer.getTokenCounter();
+          await ContractByProducer.setTokenDetails(count, 1, 1, 1);
           scanAnswer = await ContractByProducer.getTokenDetails(count);
         } else if (request.type == "produce") {
           await ContractByProducer.setProductionTimestamp(tokenId);
@@ -100,16 +101,16 @@ class Postcontroller {
         } else {
           scanAnswer = await ContractByProducer.getTokenDetails(tokenId);
         }
-      } else if (request.account == "suplier") {
-        const ContractBySuplier = TokenContract.connect(suplierWallet);
-        if (request.type == "inshop") {
-          await ContractBySuplier.setInStockTimestamp(tokenId);
-          scanAnswer = await ContractBySuplier.getTokenDetails(tokenId);
+      } else if (request.account == "supplier") {
+        const ContractBySupplier = TokenContract.connect(supplierWallet);
+        if (request.type == "inShop") {
+          await ContractBySupplier.setInStockTimestamp(tokenId);
+          scanAnswer = await ContractBySupplier.getTokenDetails(tokenId);
         } else if (request.type == "sale") {
-          await ContractBySuplier.setSoldTimestamp(tokenId);
-          scanAnswer = await ContractBySuplier.getTokenDetails(tokenId);
+          await ContractBySupplier.setSoldTimestamp(tokenId);
+          scanAnswer = await ContractBySupplier.getTokenDetails(tokenId);
         } else {
-          scanAnswer = await ContractBySuplier.getTokenDetails(tokenId);
+          scanAnswer = await ContractBySupplier.getTokenDetails(tokenId);
         }
       } else {
         scanAnswer = await ContractByUser.getTokenDetails(tokenId);
@@ -171,7 +172,7 @@ class Postcontroller {
             answerBody.buttonTitle = "Produced";
             answerBody.buttonEnable = false;
           }
-        } else if (answerBody.account == "suplier") {
+        } else if (answerBody.account == "supplier") {
           if (scanAnswer.state < PRODUCED) {
             answerBody.buttonTitle = "Not produced";
             answerBody.buttonEnable = false;
