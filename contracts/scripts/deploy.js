@@ -43,8 +43,13 @@ async function main() {
 
     await packageTracker.connect(manager).setProducer(producer.address)
     await packageTracker.connect(manager).setImageUriInList(1, TEST_IMAGE_URI)
-    await packageTracker.connect(manager).setTitleInList(1, "Test title")
-    await packageTracker.connect(manager).setDescriptionInList(1, "Test Description")
+    await packageTracker.connect(manager).setTitleInList(1, "Mystery Box")
+    await packageTracker
+        .connect(manager)
+        .setDescriptionInList(
+            1,
+            "Every mystery box is different! It contains 3 random objects/gifts"
+        )
 
     const transferTx = await packageTracker.connect(producer).mintNft(1)
     const result = await transferTx.wait(1)

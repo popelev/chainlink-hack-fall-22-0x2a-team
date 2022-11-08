@@ -19,15 +19,15 @@ const SOLD = 4
 
 describe("Package", function () {
     let packageTracker, vrgCoordinatorV2Mock
-    let owner, manager, producer, suplier, user
+    let owner, manager, producer, supplier, user
     let subscriptionId
 
     async function deployAll() {
-        const [Owner, Manager, Producer, Suplier, User] = await ethers.getSigners()
+        const [Owner, Manager, Producer, Supplier, User] = await ethers.getSigners()
         owner = Owner
         manager = Manager
         producer = Producer
-        suplier = Suplier
+        supplier = Supplier
         user = User
         const chainId = network.config.chainId
 
@@ -59,7 +59,7 @@ describe("Package", function () {
             owner,
             manager,
             producer,
-            suplier,
+            supplier,
             user,
         }
     }
@@ -159,45 +159,45 @@ describe("Package", function () {
         })
     })
 
-    describe("setSuplier", async function () {
+    describe("setSupplier", async function () {
         it("reverted if called by not manager", async function () {
-            expect(await packageTracker.isSuplier(suplier.address)).to.equal(false)
+            expect(await packageTracker.isSupplier(supplier.address)).to.equal(false)
             await expect(
-                packageTracker.connect(user).setSuplier(suplier.address)
+                packageTracker.connect(user).setSupplier(supplier.address)
             ).to.be.revertedWith("Caller is not the manager")
-            expect(await packageTracker.isSuplier(suplier.address)).to.equal(false)
+            expect(await packageTracker.isSupplier(supplier.address)).to.equal(false)
         })
-        it("Suplier is setted correctly", async function () {
+        it("Supplier is setted correctly", async function () {
             await packageTracker.setManager(manager.address)
-            expect(await packageTracker.isSuplier(suplier.address)).to.equal(false)
-            await packageTracker.connect(manager).setSuplier(suplier.address)
-            expect(await packageTracker.isSuplier(suplier.address)).to.equal(true)
+            expect(await packageTracker.isSupplier(supplier.address)).to.equal(false)
+            await packageTracker.connect(manager).setSupplier(supplier.address)
+            expect(await packageTracker.isSupplier(supplier.address)).to.equal(true)
         })
     })
 
-    describe("resetSuplier", async function () {
+    describe("resetSupplier", async function () {
         beforeEach(async function () {
             await packageTracker.setManager(manager.address)
-            await packageTracker.connect(manager).setSuplier(suplier.address)
+            await packageTracker.connect(manager).setSupplier(supplier.address)
         })
 
         it("reverted if called by not manager", async function () {
-            expect(await packageTracker.isSuplier(suplier.address)).to.equal(true)
+            expect(await packageTracker.isSupplier(supplier.address)).to.equal(true)
             await expect(
-                packageTracker.connect(user).setSuplier(suplier.address)
+                packageTracker.connect(user).setSupplier(supplier.address)
             ).to.be.revertedWith("Caller is not the manager")
-            expect(await packageTracker.isSuplier(suplier.address)).to.equal(true)
+            expect(await packageTracker.isSupplier(supplier.address)).to.equal(true)
         })
-        it("Suplier is setted correctly", async function () {
-            expect(await packageTracker.isSuplier(suplier.address)).to.equal(true)
-            await packageTracker.connect(manager).resetSuplier(suplier.address)
-            expect(await packageTracker.isSuplier(suplier.address)).to.equal(false)
+        it("Supplier is setted correctly", async function () {
+            expect(await packageTracker.isSupplier(supplier.address)).to.equal(true)
+            await packageTracker.connect(manager).resetSupplier(supplier.address)
+            expect(await packageTracker.isSupplier(supplier.address)).to.equal(false)
         })
     })
     describe("token", async function () {
         beforeEach(async function () {
             await packageTracker.setManager(manager.address)
-            await packageTracker.connect(manager).setSuplier(suplier.address)
+            await packageTracker.connect(manager).setSupplier(supplier.address)
             await packageTracker.connect(manager).setProducer(producer.address)
         })
         describe("not minted token", async function () {
@@ -274,14 +274,14 @@ describe("Package", function () {
             })
         })
         describe("setInStockTimestamp", async function () {
-            it("reverted if caller is not the suplier", async function () {
+            it("reverted if caller is not the supplier", async function () {
                 await expect(
                     packageTracker.connect(user).setInStockTimestamp(FIRST_TOKEN)
-                ).to.be.revertedWith("Caller is not the suplier")
+                ).to.be.revertedWith("Caller is not the supplier")
             })
             it("reverted if token is not minted", async function () {
                 await expect(
-                    packageTracker.connect(suplier).setInStockTimestamp(FIRST_TOKEN)
+                    packageTracker.connect(supplier).setInStockTimestamp(FIRST_TOKEN)
                 ).to.be.revertedWith("Token not ready to move in stock")
             })
             it("in stock timestamp claimed", async function () {
@@ -298,7 +298,7 @@ describe("Package", function () {
                 ).to.emit(packageTracker, "TokenPoduced")
 
                 await expect(
-                    packageTracker.connect(suplier).setInStockTimestamp(FIRST_TOKEN)
+                    packageTracker.connect(supplier).setInStockTimestamp(FIRST_TOKEN)
                 ).to.emit(packageTracker, "TokenInStock")
 
                 const details = await packageTracker.getTokenDetails(FIRST_TOKEN)
@@ -307,14 +307,14 @@ describe("Package", function () {
         })
 
         describe("setSoldTimestamp", async function () {
-            it("reverted if caller is not the suplier", async function () {
+            it("reverted if caller is not the supplier", async function () {
                 await expect(
                     packageTracker.connect(user).setSoldTimestamp(FIRST_TOKEN)
-                ).to.be.revertedWith("Caller is not the suplier")
+                ).to.be.revertedWith("Caller is not the supplier")
             })
             it("reverted if token is not minted", async function () {
                 await expect(
-                    packageTracker.connect(suplier).setSoldTimestamp(FIRST_TOKEN)
+                    packageTracker.connect(supplier).setSoldTimestamp(FIRST_TOKEN)
                 ).to.be.revertedWith("Token not ready to sale")
             })
             it("sold timestamp claimed after production", async function () {
@@ -330,7 +330,7 @@ describe("Package", function () {
                     packageTracker.connect(producer).setProductionTimestamp(FIRST_TOKEN)
                 ).to.emit(packageTracker, "TokenPoduced")
 
-                await expect(packageTracker.connect(suplier).setSoldTimestamp(FIRST_TOKEN)).to.emit(
+                await expect(packageTracker.connect(supplier).setSoldTimestamp(FIRST_TOKEN)).to.emit(
                     packageTracker,
                     "TokenSold"
                 )
@@ -353,9 +353,9 @@ describe("Package", function () {
                 ).to.emit(packageTracker, "TokenPoduced")
 
                 await expect(
-                    packageTracker.connect(suplier).setInStockTimestamp(FIRST_TOKEN)
+                    packageTracker.connect(supplier).setInStockTimestamp(FIRST_TOKEN)
                 ).to.emit(packageTracker, "TokenInStock")
-                await expect(packageTracker.connect(suplier).setSoldTimestamp(FIRST_TOKEN)).to.emit(
+                await expect(packageTracker.connect(supplier).setSoldTimestamp(FIRST_TOKEN)).to.emit(
                     packageTracker,
                     "TokenSold"
                 )

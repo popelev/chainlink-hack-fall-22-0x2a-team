@@ -35,7 +35,7 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     /* Manage contract */
     mapping(address => bool) private s_managers;
     mapping(address => bool) private s_producers;
-    mapping(address => bool) private s_supliers;
+    mapping(address => bool) private s_suppliers;
 
     /* Chainlink VRF varibles */
     VRFCoordinatorV2Interface private immutable i_vrfCoordinator;
@@ -155,12 +155,12 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         s_producers[producer] = false;
     }
 
-    function setSuplier(address suplier) external onlyManager {
-        s_supliers[suplier] = true;
+    function setSupplier(address supplier) external onlyManager {
+        s_suppliers[supplier] = true;
     }
 
-    function resetSuplier(address suplier) external onlyManager {
-        s_supliers[suplier] = false;
+    function resetSupplier(address supplier) external onlyManager {
+        s_suppliers[supplier] = false;
     }
 
     /* PRODUCER SETTERS */
@@ -195,8 +195,8 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         s_tokenDetails[tokenIndex].descriptionId = descriptionId;
     }
 
-    /* SUPLIER SETTERS */
-    function setInStockTimestamp(uint256 index) external onlySuplier {
+    /* Supplier SETTERS */
+    function setInStockTimestamp(uint256 index) external onlySupplier {
         require(
             s_tokenDetails[index].state == TokenState.PRODUCED,
             "Token not ready to move in stock"
@@ -207,7 +207,7 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         emit TokenInStock(index, timestamp);
     }
 
-    function setSoldTimestamp(uint256 index) external onlySuplier {
+    function setSoldTimestamp(uint256 index) external onlySupplier {
         TokenState tokenState = s_tokenDetails[index].state;
         require(
             tokenState == TokenState.PRODUCED || tokenState == TokenState.IN_STOCK,
@@ -272,8 +272,8 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return s_producers[producer];
     }
 
-    function isSuplier(address suplier) public view returns (bool) {
-        return s_supliers[suplier];
+    function isSupplier(address supplier) public view returns (bool) {
+        return s_suppliers[supplier];
     }
 
     /* MODIFIERS */
@@ -287,8 +287,8 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         _;
     }
 
-    modifier onlySuplier() {
-        require(s_supliers[msg.sender], "Caller is not the suplier");
+    modifier onlySupplier() {
+        require(s_suppliers[msg.sender], "Caller is not the supplier");
 
         _;
     }
