@@ -62,10 +62,24 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     event TokenInStock(uint256 tokenId, uint256 time);
     event TokenSold(uint256 tokenId, uint256 time);
 
-    /* Token description Events */
+    /* Token description List Events */
     event TitleListEdited(uint256 indexed id, string oldString, string newString);
     event DescriptionListEdited(uint256 indexed id, string oldString, string newString);
     event ImageUriListEdited(uint256 indexed id, string oldString, string newString);
+
+    /* Token description Events */
+    event TokenTitleEdited(uint256 indexed tokenId, uint256 titleId);
+    event TokenDescriptionEdited(uint256 indexed tokenId, uint256 descriptionId);
+    event TokenImageUriEdited(uint256 indexed tokenId, uint256 imageUriId);
+
+    /* Manager Events */
+    event ManagerListEdited(address manager, bool value);
+
+    /* Producer Events */
+    event ProducerListEdited(address producer, bool value);
+
+    /* Supplier Events */
+    event SupplierListEdited(address supplier, bool value);
 
     /* CONSTRUCTOR */
     constructor(
@@ -119,10 +133,12 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     /* OWNER SETTERS */
     function setManager(address manager) external onlyOwner {
         s_managers[manager] = true;
+        emit ManagerListEdited(manager, true);
     }
 
     function resetManager(address manager) external onlyOwner {
         s_managers[manager] = false;
+        emit ManagerListEdited(manager, false);
     }
 
     /* MANAGER SETTERS */
@@ -149,18 +165,22 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     function setProducer(address producer) external onlyManager {
         s_producers[producer] = true;
+        emit ProducerListEdited(producer, true);
     }
 
     function resetProducer(address producer) external onlyManager {
         s_producers[producer] = false;
+        emit ProducerListEdited(producer, false);
     }
 
     function setSupplier(address supplier) external onlyManager {
         s_suppliers[supplier] = true;
+        emit SupplierListEdited(supplier, true);
     }
 
     function resetSupplier(address supplier) external onlyManager {
         s_suppliers[supplier] = false;
+        emit SupplierListEdited(supplier, false);
     }
 
     /* PRODUCER SETTERS */
@@ -172,16 +192,19 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         emit TokenPoduced(index, timestamp);
     }
 
-    function setTokenImageUri(uint256 tokenIndex, uint256 imageUriId) external onlyProducer {
+    function setTokenImageUri(uint256 tokenIndex, uint256 imageUriId) public onlyProducer {
         s_tokenDetails[tokenIndex].imageUriId = imageUriId;
+        emit TokenImageUriEdited(tokenIndex, imageUriId);
     }
 
-    function setTokenTitle(uint256 tokenIndex, uint256 titleId) external onlyProducer {
+    function setTokenTitle(uint256 tokenIndex, uint256 titleId) public onlyProducer {
         s_tokenDetails[tokenIndex].titleId = titleId;
+        emit TokenTitleEdited(tokenIndex, titleId);
     }
 
-    function setTokenDescription(uint256 tokenIndex, uint256 descriptionId) external onlyProducer {
+    function setTokenDescription(uint256 tokenIndex, uint256 descriptionId) public onlyProducer {
         s_tokenDetails[tokenIndex].descriptionId = descriptionId;
+        emit TokenDescriptionEdited(tokenIndex, descriptionId);
     }
 
     function setTokenDetails(
@@ -190,9 +213,9 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint256 titleId,
         uint256 descriptionId
     ) external onlyProducer {
-        s_tokenDetails[tokenIndex].imageUriId = imageUriId;
-        s_tokenDetails[tokenIndex].titleId = titleId;
-        s_tokenDetails[tokenIndex].descriptionId = descriptionId;
+        setTokenImageUri(tokenIndex, imageUriId);
+        setTokenTitle(tokenIndex, titleId);
+        setTokenDescription(tokenIndex, descriptionId);
     }
 
     /* Supplier SETTERS */
@@ -289,7 +312,6 @@ contract Package is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     modifier onlySupplier() {
         require(s_suppliers[msg.sender], "Caller is not the supplier");
-
         _;
     }
 }
