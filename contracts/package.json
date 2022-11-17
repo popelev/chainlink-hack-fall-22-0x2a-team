@@ -29,6 +29,11 @@
         "@openzeppelin/contracts": "^4.7.3"
     },
     "scripts": {
-        "deploy": "npx hardhat run  scripts/deploy.js"
+        "deploy": "npx hardhat run  scripts/deploy.js",
+        "slither": "slither . --solc-remaps '@openzeppelin=node_modules/@openzeppelin @chainlink=node_modules/@chainlink' --exclude naming-convention,external-function,low-level-calls",
+        "toolbox": "docker run -it --rm -v $PWD:/src trailofbits/eth-security-toolbox",
+        "lint": "solhint 'contracts/*.sol'",
+        "lint:fix": "solhint 'contracts/**/*.sol' --fix",
+        "format": "prettier --write ."
     }
 }
